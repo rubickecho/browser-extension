@@ -32,6 +32,22 @@ This is an example of an action:
 
 You must always include the <Thought> and <Action> open/close tags or else your response will be marked as invalid.`;
 
+const customAIChat = async (systemMessage: string, prompt: string) => {
+  const response = await fetch('https://n8n.rubickecho.com/webhook/browser-bot/next-action', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      systemMessage: systemMessage,
+      userPrompt: prompt
+    })
+  });
+  
+  const completion = await response.json();
+  return completion;
+}
+
 export async function determineNextAction(
   taskInstructions: string,
   previousActions: ParsedResponseSuccess[],
@@ -55,25 +71,30 @@ export async function determineNextAction(
 
   for (let i = 0; i < maxAttempts; i++) {
     try {
-      const completion = await openai.createChatCompletion({
-        model: model,
-        messages: [
-          {
-            role: 'system',
-            content: systemMessage,
-          },
-          { role: 'user', content: prompt },
-        ],
-        max_tokens: 500,
-        temperature: 0,
-        stop: ['</Action>'],
-      });
+      // console.log('system message', systemMessage);
+      // console.log('user prompt', prompt);
+      const completion = await customAIChat(systemMessage, prompt);
+      // const completion = await openai.createChatCompletion({
+      //   model: model,
+      //   messages: [
+      //     {
+      //       role: 'system',
+      //       content: systemMessage,
+      //     },
+      //     { role: 'user', content: prompt },
+      //   ],
+      //   max_tokens: 500,
+      //   temperature: 0,
+      //   stop: ['</Action>'],
+      // });
+      console.log('completion', completion);
 
       return {
-        usage: completion.data.usage as CreateCompletionResponseUsage,
+        // usage: completion.data.usage as CreateCompletionResponseUsage,
+        usage: 0,
         prompt,
         response:
-          completion.data.choices[0].message?.content?.trim() + '</Action>',
+          completion.text?.trim() + '</Action>',
       };
     } catch (error: any) {
       console.log('determineNextAction error', error);

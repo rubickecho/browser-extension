@@ -5,6 +5,7 @@ import { useAppState } from '../state/store';
 import RunTaskButton from './RunTaskButton';
 import TaskHistory from './TaskHistory';
 import TaskStatus from './TaskStatus';
+import { WebSocketUI } from './WebSocketUI';
 
 const TaskUI = () => {
   const state = useAppState((state) => ({
@@ -45,6 +46,7 @@ const TaskUI = () => {
 
   return (
     <>
+      <WebSocketUI />
       <Textarea
         autoFocus
         placeholder="Taxy uses OpenAI's GPT-4 API to perform actions on the current page. Try telling it to sign up for a newsletter, or to add an item to your cart."
