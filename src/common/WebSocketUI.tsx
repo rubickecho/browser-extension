@@ -15,7 +15,7 @@ export const WebSocketUI = () => {
     runTask: state.currentTask.actions.runTask,
     instructions: state.ui.instructions,
     setInstructions: state.ui.actions.setInstructions,
-    interruptTask: state.currentTask.actions.interrupt
+    interruptTask: state.currentTask.actions.interrupt,
   }));
 
   const toast = useToast();
@@ -33,9 +33,9 @@ export const WebSocketUI = () => {
     [toast]
   );
 
-  useEffect(() => {    
+  useEffect(() => {
     const newSocket = io('http://localhost:3000', {
-      path: '/v1/ws/task'
+      path: '/v1/ws/task',
     });
 
     newSocket.on('connect', () => {
@@ -56,7 +56,7 @@ export const WebSocketUI = () => {
       setMessageHistory((prev) => [...prev, message]);
       setNextCount((preValue) => preValue + 1);
       state.setInstructions(message);
-      state.runTask(toastError)
+      state.runTask(toastError);
     });
 
     setSocket(newSocket);
@@ -84,7 +84,8 @@ export const WebSocketUI = () => {
 
   return (
     <div>
-      <h2>Current Next Count: { nextCount }</h2>
+      <h1>DEV WebSocket UI</h1>
+      <h2>Current Next Count: {nextCount}</h2>
       <div>
         <Button
           onClick={handleClickSendReady}
@@ -102,11 +103,7 @@ export const WebSocketUI = () => {
         </Button>
       </div>
       <div>
-        <Button
-          onClick={state.interruptTask}
-        >
-          STOP
-        </Button>
+        <Button onClick={state.interruptTask}>STOP</Button>
       </div>
       <span>The WebSocket is currently {connectionStatus}</span>
       <ul>

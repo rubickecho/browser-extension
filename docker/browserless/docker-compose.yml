@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  browserless-chromium:
+    image: ghcr.io/browserless/chromium
+    ports:
+      - "8091:3000"
+    environment:
+      CONCURRENT: 10
+      TOKEN: 6R0W53R135510
+      CORS: true
+    restart: always

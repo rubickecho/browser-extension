@@ -24,6 +24,16 @@ export const availableActions = [
     ],
   },
   {
+    name: 'navigateToUrl',
+    description: 'Navigates to a URL',
+    args: [
+      {
+        name: 'url',
+        type: 'string',
+      },
+    ],
+  },
+  {
     name: 'finish',
     description: 'Indicates the task is finished',
     args: [],

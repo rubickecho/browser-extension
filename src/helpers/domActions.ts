@@ -9,6 +9,14 @@ async function sendCommand(method: string, params?: any) {
   return chrome.debugger.sendCommand({ tabId }, method, params);
 }
 
+/**
+ * @param url The URL to navigate to
+ */
+async function navigateToUrl(url: number) {
+  await sendCommand('Page.navigate', { url });
+  await sleep(2000);
+}
+
 async function getObjectId(originalId: number) {
   const uniqueId = await callRPC('getUniqueElementSelectorId', [originalId]);
   // get node id
@@ -125,6 +133,7 @@ async function setValue(payload: {
 export const domActions = {
   click,
   setValue,
+  navigateToUrl,
 } as const;
 
 export type DOMActions = typeof domActions;

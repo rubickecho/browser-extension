@@ -9,8 +9,8 @@ export type ParsedResponseSuccess = {
 export type ParsedResponse =
   | ParsedResponseSuccess
   | {
-    error: string;
-  };
+      error: string;
+    };
 
 export function parseResponse(text: string): ParsedResponse {
   const thoughtMatch = text.match(/<Thought>(.*?)<\/Thought>/);
@@ -32,7 +32,12 @@ export function parseResponse(text: string): ParsedResponse {
   const actionString = actionMatch[1];
   const actionPattern = /(\w+)\((.*?)\)/;
   const actionParts = actionString.match(actionPattern);
-
+  console.log(
+    'actionString: %s, actionPattern: %s, actionParts: %s',
+    actionString,
+    actionPattern,
+    actionParts
+  );
   if (!actionParts) {
     return {
       error:
@@ -42,6 +47,11 @@ export function parseResponse(text: string): ParsedResponse {
 
   const actionName = actionParts[1];
   const actionArgsString = actionParts[2];
+  console.log(
+    'actionName: %s, actionArgsString: %s, actionParts: %s',
+    actionName,
+    actionArgsString
+  );
 
   const availableAction = availableActions.find(
     (action) => action.name === actionName
@@ -58,7 +68,7 @@ export function parseResponse(text: string): ParsedResponse {
     .map((arg) => arg.trim())
     .filter((arg) => arg !== '');
   const parsedArgs: Record<string, number | string> = {};
-
+  console.log('availableAction: %s, argsArray: %o', availableAction, argsArray);
   if (argsArray.length !== availableAction.args.length) {
     return {
       error: `Invalid number of arguments: Expected ${availableAction.args.length} for action "${actionName}", but got ${argsArray.length}.`,
@@ -68,7 +78,7 @@ export function parseResponse(text: string): ParsedResponse {
   for (let i = 0; i < argsArray.length; i++) {
     const arg = argsArray[i];
     const expectedArg = availableAction.args[i];
-
+    console.log('expectedArg:', expectedArg);
     if (expectedArg.type === 'number') {
       const numberValue = Number(arg);
 
@@ -81,7 +91,11 @@ export function parseResponse(text: string): ParsedResponse {
       parsedArgs[expectedArg.name] = numberValue;
     } else if (expectedArg.type === 'string') {
       const stringValue =
-        (arg.startsWith('"') && arg.endsWith('"')) || (arg.startsWith("'") && arg.endsWith("'")) || (arg.startsWith("`") && arg.endsWith("`")) ? arg.slice(1, -1) : null;
+        (arg.startsWith('"') && arg.endsWith('"')) ||
+        (arg.startsWith("'") && arg.endsWith("'")) ||
+        (arg.startsWith('`') && arg.endsWith('`'))
+          ? arg.slice(1, -1)
+          : null;
 
       if (stringValue === null) {
         return {
@@ -89,7 +103,7 @@ export function parseResponse(text: string): ParsedResponse {
         };
       }
 
-      parsedArgs[expectedArg.name] = stringValue;
+      parsedArgs[expectedArg.name] = stringValue.toString();
     } else {
       return {
         // @ts-expect-error this is here to make sure we don't forget to update this code if we add a new arg type
@@ -97,6 +111,7 @@ export function parseResponse(text: string): ParsedResponse {
       };
     }
   }
+  console.log('parsedArgs:', parsedArgs);
 
   const parsedAction = {
     name: availableAction.name,
