@@ -157,6 +157,12 @@ export const createCurrentTaskSlice: MyStateCreator<CurrentTaskSlice> = (
               action?.parsedAction.name,
               action?.parsedAction.args
             );
+          } else if (['navigateToUrl', 'getPageUrl'].includes(action.parsedAction.name)) {
+            const result = await callDOMAction(
+              action?.parsedAction.name,
+              action?.parsedAction.args as any
+            );
+            console.log(`Result of ${action.parsedAction.name}:`, result);
           }
 
           if (wasStopped()) break;

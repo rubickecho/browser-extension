@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { Button, useToast } from '@chakra-ui/react';
 import { useAppState } from '../state/store';
+import { domActions } from '../helpers/domActions';
 
 export const WebSocketUI = () => {
   const [socket, setSocket] = useState<Socket | null>(null);
@@ -34,36 +35,36 @@ export const WebSocketUI = () => {
   );
 
   useEffect(() => {
-    const newSocket = io('http://localhost:3000', {
-      path: '/v1/ws/task',
-    });
+    // const newSocket = io('http://localhost:3000', {
+    //   path: '/v1/ws/task',
+    // });
 
-    newSocket.on('connect', () => {
-      setConnectionStatus('Open');
-    });
+    // newSocket.on('connect', () => {
+    //   setConnectionStatus('Open');
+    // });
 
-    newSocket.on('disconnect', () => {
-      setConnectionStatus('Closed');
-    });
+    // newSocket.on('disconnect', () => {
+    //   setConnectionStatus('Closed');
+    // });
 
-    newSocket.on('connect_error', () => {
-      setConnectionStatus('Error');
-    });
+    // newSocket.on('connect_error', () => {
+    //   setConnectionStatus('Error');
+    // });
 
-    newSocket.on('task', (data: { message: string }) => {
-      console.log('task result:', data);
-      const message = data.message;
-      setMessageHistory((prev) => [...prev, message]);
-      setNextCount((preValue) => preValue + 1);
-      state.setInstructions(message);
-      state.runTask(toastError);
-    });
+    // newSocket.on('task', (data: { message: string }) => {
+    //   console.log('task result:', data);
+    //   const message = data.message;
+    //   setMessageHistory((prev) => [...prev, message]);
+    //   setNextCount((preValue) => preValue + 1);
+    //   state.setInstructions(message);
+    //   state.runTask(toastError);
+    // });
 
-    setSocket(newSocket);
+    // setSocket(newSocket);
 
-    return () => {
-      newSocket.close();
-    };
+    // return () => {
+    //   newSocket.close();
+    // };
   }, []);
 
   const runTask = () => {
@@ -86,6 +87,9 @@ export const WebSocketUI = () => {
     <div>
       <h1>DEV WebSocket UI</h1>
       <h2>Current Next Count: {nextCount}</h2>
+      <div>
+        <Button onClick={() => domActions.navigateToUrl('https://x.com/search?q=claude&src=typed_query')}>Command: Page.navigate</Button>
+      </div>
       <div>
         <Button
           onClick={handleClickSendReady}

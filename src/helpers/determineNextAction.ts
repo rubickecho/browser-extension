@@ -27,8 +27,13 @@ You will be be given a task to perform and the current state of the DOM. You wil
 
 This is an example of an action:
 
+example-01:
 <Thought>I should click the add to cart button</Thought>
 <Action>click(223)</Action>
+
+example-02:
+<Thought>I should navigate to url: http://example.com</Thought>
+<Action>navigateToUrl("http://example.com")</Action>
 
 You must always include the <Thought> and <Action> open/close tags or else your response will be marked as invalid.`;
 

@@ -12,9 +12,26 @@ async function sendCommand(method: string, params?: any) {
 /**
  * @param url The URL to navigate to
  */
-async function navigateToUrl(url: number) {
+async function navigateToUrl({ url }: {url: string}) {
+  console.log('navigateToUrlnavigateToUrlnavigateToUrl url:', url);
   await sendCommand('Page.navigate', { url });
-  await sleep(2000);
+  
+  // Wait for the page to load
+  // await sendCommand('Page.loadEventFired');
+
+  await sleep(3000);
+}
+
+/**
+ * get the current page URL
+ * @returns {string}
+ */
+async function getPageUrl() {
+  const { result } = (await sendCommand('Runtime.evaluate', {
+    expression: 'window.location.href',
+  })) as any;
+  console.log('getPageUrl result:', result);
+  return result.value;
 }
 
 async function getObjectId(originalId: number) {
@@ -134,6 +151,7 @@ export const domActions = {
   click,
   setValue,
   navigateToUrl,
+  getPageUrl
 } as const;
 
 export type DOMActions = typeof domActions;
@@ -146,5 +164,6 @@ export const callDOMAction = async <T extends ActionName>(
   payload: ActionPayload<T>
 ): Promise<void> => {
   // @ts-expect-error - we know that the type is valid
-  await domActions[type](payload);
+  const result = await domActions[type](payload);
+  return result;
 };

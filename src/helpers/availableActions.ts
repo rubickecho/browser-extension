@@ -25,13 +25,18 @@ export const availableActions = [
   },
   {
     name: 'navigateToUrl',
-    description: 'Navigates to a URL',
+    description: 'Navigate to a URL',
     args: [
       {
         name: 'url',
         type: 'string',
       },
     ],
+  },
+  {
+    name: 'getPageUrl',
+    description: 'Get the current page URL',
+    args: [],
   },
   {
     name: 'finish',

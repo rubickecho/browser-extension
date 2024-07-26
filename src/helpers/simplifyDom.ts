@@ -48,7 +48,10 @@ function generateSimplifiedDom(
     element.hasAttribute('role');
   const hasLabel =
     element.hasAttribute('aria-label') || element.hasAttribute('name');
-  const includeNode = interactive || hasLabel;
+
+  const hasTestId =
+    element.hasAttribute('data-testid') || element.hasAttribute('testId');
+  const includeNode = interactive || hasLabel || hasTestId;
 
   if (!includeNode && children.length === 0) return null;
   if (!includeNode && children.length === 1) {
@@ -66,6 +69,7 @@ function generateSimplifiedDom(
     'value',
     'role',
     'title',
+    'data-testid'
   ];
 
   for (const attr of allowedAttributes) {
